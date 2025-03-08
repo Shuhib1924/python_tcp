@@ -1,18 +1,29 @@
 import socket
 
-# print(socket.gethostname())
-# print(socket.gethostbyname(socket.gethostname()))
+HOST_IP = socket.gethostbyname(socket.gethostname())
+HOST_PORT = 12345
+ENCODER = "utf-8"
+BYTESIZE = 1024
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_socket.bind((socket.gethostbyname(socket.gethostname()), 12345))
+server_socket.bind((HOST_IP, HOST_PORT))
 server_socket.listen()
-print("server started")
+
+print("server is running...")
+client_socket, client_address = server_socket.accept()
+client_socket.send("you are connected".encode(ENCODER))
+
 while True:
-    client_socket, client_address = server_socket.accept()
-    print(type(client_socket))
-    print(client_socket)
-    print(type(client_address))
-    print(client_address)
-    print(f"Connected to {client_address}")
-    # client_socket.close()
-    client_socket.send("you are connected".encode("utf-8"))
+    message = client_socket.recv(BYTESIZE).decode(ENCODER)
+
+    if message == "exit":
+        client_socket.send("quit".encode(ENCODER))
+        # client_socket.close()
+        print("... disconnected")
+        break
+    else:
+        print(message)
+        message = input("message: ")
+        client_socket.send(message.encode(ENCODER))
+
+client_socket.close()
