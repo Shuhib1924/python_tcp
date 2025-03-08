@@ -1,8 +1,7 @@
 import socket
 
-print(socket.gethostname())
-print(socket.gethostbyname(socket.gethostname()))
-
+# print(socket.gethostname())
+# print(socket.gethostbyname(socket.gethostname()))
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((socket.gethostbyname(socket.gethostname()), 12345))
@@ -14,5 +13,6 @@ while True:
     print(client_socket)
     print(type(client_address))
     print(client_address)
-    client_socket.close()
     print(f"Connected to {client_address}")
+    # client_socket.close()
+    client_socket.send("you are connected".encode("utf-8"))
